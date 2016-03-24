@@ -1,0 +1,26 @@
+{
+  "name": "tempest-capital",
+  "version": "1.0.0",
+  "description": "",
+  "main": "api.js",
+  "dependencies": {
+    "bluebird": "^3.0.6",
+    "artificial-neural-network": "^1.0.8",
+    "elasticsearch": "^10.0.1",
+    "express": "^4.13.3",
+    "JSONStream": "^1.0.7",
+    "machine_learning": "^0.0.8",
+    "stats-lite": "^2.0.0",
+    "q": "^1.4.1",
+    "lodash": "^3.10.1",
+    "sentiment": "^1.0.6",
+    "moment": "^2.12.0",
+    "underscore": "^1.8.3"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Tempest Ventures, LLC",
+  "license": "Private Use, Only"
+}
