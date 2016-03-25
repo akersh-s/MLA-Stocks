@@ -1,1 +1,1 @@
-{"difference":{"mean":0.28791026173660156,"median":0,"mode":0,"variance":118.62324256555648,"stdev":10.891429776000784,"1percentile":-21},"endCount":{"mean":3.751973410884919,"median":1,"mode":1,"variance":208.8396045393802,"stdev":14.451283837063757,"99percentile":42}}
+{"difference":{"mean":-0.061166215810039073,"median":0,"mode":0,"variance":66.17645105953815,"stdev":8.134890967894908,"1percentile":-21.959999999999994},"endCount":{"mean":3.403516681695221,"median":1,"mode":1,"variance":115.55749289294313,"stdev":10.749767108776968,"99percentile":40}}
