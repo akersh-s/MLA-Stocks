@@ -3,7 +3,8 @@ var jsonfile = require('jsonfile');
 var ml = require('machine_learning');
 var fs = require('fs');
 var JSONStream = require('JSONStream');
-var stream = fs.createReadStream('data/jan_2016_updated.json', {encoding: 'utf8'});
+var stream = fs.createReadStream('data/oct_2015_updated.json', {encoding: 'utf8'});
+var json2csv = require('nice-json2csv');
 var _ = require('underscore');
 
 
@@ -34,9 +35,11 @@ parser.on('data', function (obj) {
 	console.log("starting");
 
     var processedLine = processLine(obj);
+    var csvContent = json2csv.convert(processedLine.data);
 
 	jsonfile.writeFile('output_data.json', processedLine.data);
     jsonfile.writeFile('output_stats.json', processedLine.stats);
+    fs.writeFile('output_data.csv', csvContent);
 
     console.log("complete");
 
