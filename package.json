@@ -4,10 +4,13 @@
   "description": "",
   "main": "api.js",
   "dependencies": {
+    "async": "^1.5.2",
     "bluebird": "^3.0.6",
     "artificial-neural-network": "^1.0.8",
     "elasticsearch": "^10.0.1",
     "express": "^4.13.3",
+    "fs-extra": "^0.26.5",
+    "http-request": "^0.7.0",
     "JSONStream": "^1.0.7",
     "machine_learning": "^0.0.8",
     "stats-lite": "^2.0.0",
@@ -15,7 +18,10 @@
     "lodash": "^3.10.1",
     "sentiment": "^1.0.6",
     "moment": "^2.12.0",
-    "underscore": "^1.8.3"
+    "underscore": "^1.8.3",
+    "sentiment": "^1.0.6",
+    "twitter": "^1.2.5",
+    "yargs": "^4.2.0"
   },
   "devDependencies": {},
   "scripts": {
