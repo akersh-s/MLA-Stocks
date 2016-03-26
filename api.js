@@ -17,18 +17,15 @@ app.get('/month', function(req, res) {
     var processedData = pump(data);
     var sortedData = _.sortBy(processedData, 'difference');
     var statsDifference = getStatsDifference(sortedData);
-    var statsEndCount = getStatsEndCount(sortedData);
-    var statsCountSlope = getStatsCountSlope(sortedData);
-    var statsSentimentSlope = getStatsSentimentSlope(sortedData);
+    //var statsEndCount = getStatsEndCount(sortedData);
+    //var statsCountSlope = getStatsCountSlope(sortedData);
+    //var statsSentimentSlope = getStatsSentimentSlope(sortedData);
 
     var output ={
       "stats": {
-        "difference": statsDifference,
-        "endCount": statsEndCount,
-        "countSlope": statsCountSlope,
-        "sentimentSlope":statsSentimentSlope
+        "difference": statsDifference
       },
-      "data": sortedData
+      "data": compareStats(sortedData, statsDifference)
     }
     res.json(output);
     //res.json(data);
@@ -77,14 +74,16 @@ app.get('/day', function(req, res) {
     for(var i = 0; i < Object.keys(groupedData).length; i++){
       var obj = groupedData;
       var date = Object.getOwnPropertyNames(obj)[i];
+      var statsDifference = getStatsDifference(obj[Object.getOwnPropertyNames(obj)[i]]);
+      var data = obj[Object.getOwnPropertyNames(obj)[i]];
 
       var chunk = {
         "date": date,
         "block": {
           "stats": {
-            "difference": getStatsDifference(obj[Object.getOwnPropertyNames(obj)[i]])
+            "difference": statsDifference
           },
-          "data": obj[Object.getOwnPropertyNames(obj)[i]]
+          "data": compareStats(data, statsDifference)
         }
       };
 
@@ -145,6 +144,20 @@ var search = function() {
   });
 
   return test;
+}
+
+var compareStats = function(data, stats){
+
+  for (var i = 0; i < data.length; i++) {
+      console.log(data[i]);
+      if(data[i].difference <= (stats.mean - (stats.stdev * 3))) {
+        data[i].isDifference3StDevFromMean = true;
+      } else {
+        data[i].isDifference3StDevFromMean = false;
+      }
+  }
+
+  return data;
 }
 
 
@@ -264,6 +277,7 @@ var block = [];
         "ticker": obj[i].obj[0].key,
         "startCount": obj[i].obj[0].doc_count,
         "endCount": obj[i+1].obj[0].doc_count,
+        "countRatio": obj[i+1].obj[0].doc_count/obj[i].obj[0].doc_count,
         "countSlope": (obj[i].obj[0].doc_count - obj[i+1].obj[0].doc_count) / (moment.utc(moment(endDate, "YYYY/MM/DD").diff(moment(startDate, "YYYY/MM/DD"))).format("DD") - 1),
         "changeInSentimentSlope": deltaSentiment / (moment.utc(moment(endDate, "YYYY/MM/DD").diff(moment(startDate, "YYYY/MM/DD"))).format("DD") - 1)
       };
@@ -280,6 +294,7 @@ var block = [];
         "ticker": obj[0].obj[0].key,
         "startCount": obj[0].obj[0].doc_count,
         "endCount": obj[0].obj[0].doc_count,
+        "countRatio": "N/A",
         "countSlope": "N/A",
         "changeInSentimentSlope": "N/A"
       };
