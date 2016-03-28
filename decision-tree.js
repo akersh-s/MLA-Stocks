@@ -54,10 +54,11 @@ function processLine(line) { // here's where we do something with a line
     for (var i = 0; i < line.data.length; i++){
     	var arr = [];
 
-        arr.push(line.data[i].isDifference3StDevFromMean);
+        //arr.push(line.data[i].isDifference3StDevFromMean);
         arr.push(line.data[i].difference);
     	arr.push(line.data[i].countSlope);
         arr.push(line.data[i].changeInSentimentSlope);
+        arr.push(line.data[i].countRatio);
     	//arr.push(line.data[i].priceOnStartDate);
         //arr.push(line.data[i].endSentiment);
     	var key = _.keys(dt.classify(arr));

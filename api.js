@@ -68,7 +68,6 @@ app.get('/day', function(req, res) {
     var processedData = pump(data);
     var sortedData = _.sortBy(processedData, 'changeInSentimentSlope');
     var groupedData = _.groupBy(sortedData, 'endDate');
-    console.log("toast");
     var output =[];
 
     for(var i = 0; i < Object.keys(groupedData).length; i++){
@@ -109,7 +108,7 @@ client.ping({
 
 var search = function() {
   var test = client.search({
-    index: 'nov_twits',
+    index: 'dec_twits',
     type: 'block',
     from: 0,
     body: {
@@ -149,7 +148,7 @@ var search = function() {
 var compareStats = function(data, stats){
 
   for (var i = 0; i < data.length; i++) {
-      console.log(data[i]);
+
       if(data[i].difference <= (stats.mean - (stats.stdev * 3))) {
         data[i].isDifference3StDevFromMean = true;
       } else {
