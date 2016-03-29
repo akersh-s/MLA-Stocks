@@ -1,7 +1,7 @@
 var fs = require('fs-extra');
 var cache = {};
 var reported = [];
-var monthYear = 'jan_2016';
+var monthYear = 'oct_dec_2015';
 var json = JSON.parse(fs.readFileSync(__dirname + '/../data/api_output/month_' + monthYear + '.json'));
 /*
 { difference: -66,
@@ -32,6 +32,7 @@ json.data.forEach(function(item) {
         newItem.priceOnStartDate = lookupPrice(ticker, startDate, 0, newItem);
         newItem.priceOnEndDate = lookupPrice(ticker, endDate, 0);
         newItem.priceOnEndDate3 = lookupPrice(ticker, endDate, 3);
+        newItem.priceOnEndDate7 = lookupPrice(ticker, endDate, 7);
         newItem.priceOnEndDate15 = lookupPrice(ticker, endDate, 15);
         newItem.priceOnEndDate30 = lookupPrice(ticker, endDate, 30);
 

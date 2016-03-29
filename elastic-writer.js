@@ -2,7 +2,7 @@ var elasticsearch = require('elasticsearch');
 var fs = require('fs');
 var JSONStream = require('JSONStream');
 var sentiment = require('sentiment');
-var stream = fs.createReadStream('stocktwits_messages_dec_2015.json', {encoding: 'utf8'});
+var stream = fs.createReadStream('data/backup/stocktwits_messages_dec_2015.json', {encoding: 'utf8'});
 
 
 var  parser = JSONStream.parse();
@@ -32,7 +32,7 @@ function processLine(line) { // here's where we do something with a line
 
 
             client.create({
-              index: 'dec_twits',
+              index: 'octthroughdec_twits',
               type: 'block',
               body: line
             }, function (error, response) {

@@ -3,13 +3,13 @@ var jsonfile = require('jsonfile');
 var ml = require('machine_learning');
 var fs = require('fs');
 var JSONStream = require('JSONStream');
-var stream = fs.createReadStream('data/dec_2015_updated.json', {encoding: 'utf8'});
+var stream = fs.createReadStream('data/nov_2015_updated.json', {encoding: 'utf8'});
 var json2csv = require('nice-json2csv');
 var _ = require('underscore');
 
 
-var data = jsonfile.readFileSync('trainer/nov_2015_indicators.json');
-var result = jsonfile.readFileSync('trainer/nov_2015_positions.json');
+var data = jsonfile.readFileSync('trainer/oct_2015_indicators.json');
+var result = jsonfile.readFileSync('trainer/oct_2015_positions.json');
 
 console.log("preparing decision tree");
 
