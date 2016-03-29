@@ -18,15 +18,22 @@ app.get('/month', function(req, res) {
     var sortedData = _.sortBy(processedData, 'difference');
     var statsDifference = getStatsDifference(sortedData);
     //var statsEndCount = getStatsEndCount(sortedData);
-    //var statsCountSlope = getStatsCountSlope(sortedData);
-    //var statsSentimentSlope = getStatsSentimentSlope(sortedData);
+    var statsCountSlope = getStatsCountSlope(sortedData);
+    var statsSentimentSlope = getStatsSentimentSlope(sortedData);
 
-    var output ={
-      "stats": {
-        "difference": statsDifference
-      },
-      "data": compareStats(sortedData, statsDifference)
-    }
+    var stats = {
+      "difference": statsDifference,
+      "countSlope": statsCountSlope,
+      "sentimentSlope": statsSentimentSlope
+    };
+
+    var data =compareStats(sortedData, stats);
+
+    var output = {
+      "stats": stats,
+      "data": data
+    };
+
     res.json(output);
     //res.json(data);
   });
@@ -108,7 +115,7 @@ client.ping({
 
 var search = function() {
   var test = client.search({
-    index: 'octthroughdec_twits',
+    index: 'dec_twits',
     type: 'block',
     from: 0,
     body: {
@@ -148,12 +155,10 @@ var search = function() {
 var compareStats = function(data, stats){
 
   for (var i = 0; i < data.length; i++) {
-
-      if(data[i].difference <= (stats.mean - (stats.stdev * 3))) {
-        data[i].isDifference3StDevFromMean = true;
-      } else {
-        data[i].isDifference3StDevFromMean = false;
-      }
+    console.log("calculating " + i);
+    data[i].normalizedCountSlope = (data[i].countSlope - stats.countSlope.min)/(stats.countSlope.max - stats.countSlope.min);
+    data[i].normalizedSentimentSlope = (data[i].changeInSentimentSlope - stats.sentimentSlope.min)/(stats.sentimentSlope.max - stats.countSlope.min);
+    data[i].normalizedDifference = (data[i].difference - stats.difference.min)/(stats.difference.max - stats.difference.min);
   }
 
   return data;
@@ -169,7 +174,9 @@ var getStatsDifference = function(data) {
     "mode": stats.mode(cleanedData),
     "variance": stats.variance(cleanedData),
     "stdev": stats.stdev(cleanedData),
-    "1percentile": stats.percentile(cleanedData, 0.01)
+    "1percentile": stats.percentile(cleanedData, 0.01),
+    "min": _.min(cleanedData),
+    "max": _.max(cleanedData)
 
   };
 
@@ -185,7 +192,9 @@ var getStatsEndCount = function(data) {
     "mode": stats.mode(cleanedData),
     "variance": stats.variance(cleanedData),
     "stdev": stats.stdev(cleanedData),
-    "99percentile": stats.percentile(cleanedData, 0.99)
+    "99percentile": stats.percentile(cleanedData, 0.99),
+    "min": _.min(cleanedData),
+    "max": _.max(cleanedData)
 
   };
 
@@ -201,7 +210,9 @@ var getStatsCountSlope = function(data) {
     "mode": stats.mode(cleanedData),
     "variance": stats.variance(cleanedData),
     "stdev": stats.stdev(cleanedData),
-    "99percentile": stats.percentile(cleanedData, 0.99)
+    "99percentile": stats.percentile(cleanedData, 0.99),
+    "min": _.min(cleanedData),
+    "max": _.max(cleanedData)
 
   };
 
@@ -218,7 +229,9 @@ var getStatsSentimentSlope = function(data) {
     "mode": stats.mode(cleanedData),
     "variance": stats.variance(cleanedData),
     "stdev": stats.stdev(cleanedData),
-    "99percentile": stats.percentile(cleanedData, 0.99)
+    "99percentile": stats.percentile(cleanedData, 0.99),
+    "min": _.min(cleanedData),
+    "max": _.max(cleanedData)
 
   };
 
