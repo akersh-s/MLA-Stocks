@@ -8,8 +8,8 @@ var json2csv = require('nice-json2csv');
 var _ = require('underscore');
 
 
-var data = jsonfile.readFileSync('trainer/dec_2015_indicators.json');
-var result = jsonfile.readFileSync('trainer/dec_2015_positions.json');
+var data = jsonfile.readFileSync('trainer/oct_dec_2015_indicators.json');
+var result = jsonfile.readFileSync('trainer/oct_dec_2015_positions.json');
 
 console.log("preparing decision tree");
 
@@ -62,7 +62,7 @@ function processLine(line) { // here's where we do something with a line
     	//arr.push(line.data[i].priceOnStartDate);
         //arr.push(line.data[i].endSentiment);
         arr.push(line.data[i].normalizedDifference);
-        //arr.push(line.data[i].normalizedCountSlope);
+        arr.push(line.data[i].normalizedCountSlope);
         arr.push(line.data[i].normalizedCountRatio);
         arr.push(line.data[i].normalizedSentimentSlope);
 
