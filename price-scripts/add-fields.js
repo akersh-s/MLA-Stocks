@@ -1,7 +1,7 @@
 var fs = require('fs-extra');
 var cache = {};
 var reported = [];
-var monthYear = 'dec_2015';
+var monthYear = 'jan_2016';
 var json = JSON.parse(fs.readFileSync(__dirname + '/../data/api_output/month_' + monthYear + '.json'));
 /*
 { difference: -66,

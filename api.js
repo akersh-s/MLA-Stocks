@@ -17,14 +17,15 @@ app.get('/month', function(req, res) {
     var processedData = pump(data);
     var sortedData = _.sortBy(processedData, 'difference');
     var statsDifference = getStatsDifference(sortedData);
-    //var statsEndCount = getStatsEndCount(sortedData);
+    var statsCountRatio = getStatsCountRatio(sortedData);
     var statsCountSlope = getStatsCountSlope(sortedData);
     var statsSentimentSlope = getStatsSentimentSlope(sortedData);
 
     var stats = {
       "difference": statsDifference,
       "countSlope": statsCountSlope,
-      "sentimentSlope": statsSentimentSlope
+      "sentimentSlope": statsSentimentSlope,
+      "countRatio": statsCountRatio
     };
 
     var data =compareStats(sortedData, stats);
@@ -115,7 +116,7 @@ client.ping({
 
 var search = function() {
   var test = client.search({
-    index: 'dec_twits',
+    index: 'jan_twits_2',
     type: 'block',
     from: 0,
     body: {
@@ -157,8 +158,9 @@ var compareStats = function(data, stats){
   for (var i = 0; i < data.length; i++) {
     console.log("calculating " + i);
     data[i].normalizedCountSlope = (data[i].countSlope - stats.countSlope.min)/(stats.countSlope.max - stats.countSlope.min);
-    data[i].normalizedSentimentSlope = (data[i].changeInSentimentSlope - stats.sentimentSlope.min)/(stats.sentimentSlope.max - stats.countSlope.min);
+    data[i].normalizedSentimentSlope = (data[i].changeInSentimentSlope - stats.sentimentSlope.min)/(stats.sentimentSlope.max - stats.sentimentSlope.min);
     data[i].normalizedDifference = (data[i].difference - stats.difference.min)/(stats.difference.max - stats.difference.min);
+    data[i].normalizedCountRatio = (data[i].countRatio - stats.countRatio.min)/(stats.countRatio.max - stats.countRatio.min)
   }
 
   return data;
@@ -186,6 +188,24 @@ var getStatsDifference = function(data) {
 var getStatsEndCount = function(data) {
   var data = data;
   var cleanedData = _.pluck(data, 'endCount');
+  var output = {
+    "mean" : stats.mean(cleanedData),
+    "median": stats.median(cleanedData),
+    "mode": stats.mode(cleanedData),
+    "variance": stats.variance(cleanedData),
+    "stdev": stats.stdev(cleanedData),
+    "99percentile": stats.percentile(cleanedData, 0.99),
+    "min": _.min(cleanedData),
+    "max": _.max(cleanedData)
+
+  };
+
+  return output;
+}
+
+var getStatsCountRatio = function(data) {
+  var data = data;
+  var cleanedData = _.pluck(data, 'countRatio');
   var output = {
     "mean" : stats.mean(cleanedData),
     "median": stats.median(cleanedData),
