@@ -156,7 +156,6 @@ var search = function() {
 var compareStats = function(data, stats) {
 
     for (var i = 0; i < data.length; i++) {
-        console.log("calculating " + i);
         data[i].normalizedCountSlope = (data[i].countSlope - stats.countSlope.min) / (stats.countSlope.max - stats.countSlope.min);
         data[i].normalizedSentimentSlope = (data[i].changeInSentimentSlope - stats.sentimentSlope.min) / (stats.sentimentSlope.max - stats.sentimentSlope.min);
         data[i].normalizedDifference = (data[i].difference - stats.difference.min) / (stats.difference.max - stats.difference.min);
