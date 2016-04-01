@@ -1,22 +1,55 @@
 var http = require('http');
 var request = require('request');
+var elasticsearch = require('elasticsearch');
+var sentiment = require('sentiment');
 
-var requestLoop = setInterval(function(){
-  request({
-      url: "https://api.stocktwits.com/api/2/streams/all.json?access_token=ccb597316f73655b16a105e9006330bd37272b81",
-      method: "GET",
-      timeout: 10000,
-      followRedirect: true,
-      maxRedirects: 10
-  },function(error, response, body){
-      if(!error && response.statusCode == 200){
-          console.log('sucess!');
-          console.log(response.body);
-      }else{
-          console.log('error' + response.statusCode);
-      }
-  });
+
+var client = new elasticsearch.Client({
+    host: 'localhost:9200',
+    log: 'info'
+});
+
+
+setInterval(function() {
+    request({
+        url: "https://api.stocktwits.com/api/2/streams/all.json?access_token=ccb597316f73655b16a105e9006330bd37272b81",
+        method: "GET",
+        timeout: 10000,
+        followRedirect: true,
+        maxRedirects: 10
+    }, function(error, response, body) {
+        if (!error && response.statusCode == 200) {
+            console.log('sucess!');
+            var messages = JSON.parse(response.body).messages;
+            processResponse(messages);
+        } else {
+            console.log('error' + response.statusCode);
+        }
+    });
 }, 10000);
 
 
-requestLoop;
+function processResponse(messages) {
+    for (var i = 0; i < messages.length; i++) {
+        processLine(messages[i]);
+    }
+}
+
+
+function processLine(line) {
+    console.log("processing");
+
+
+    client.create({
+        index: 'stream_twits',
+        type: 'block',
+        id: line.id,
+        body: line
+    }, function(error, response) {
+        if (error) {
+            console.log('elasticsearch error' + error.message);
+        } else {
+            console.log('record created');
+        }
+    });
+}
