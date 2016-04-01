@@ -38,17 +38,16 @@ function processLine(line) { // here's where we do something with a line
         var arr = [];
         var profit = (line.data[i].priceOnEndDate - line.data[i].priceOnEndDate15) / line.data[i].priceOnEndDate;
 
-        if (line.data[i].difference < 0 && profit < 0) {
+        if (line.data[i].difference < 0 && profit < -0.30) {
             arr.push("short");
         } else {
             arr.push("do nothing");
         }
 
-        //arr.push(line.data[i].isDifference3StDevFromMean);
         //arr.push(line.data[i].difference);
         //arr.push(line.data[i].countSlope);
         //arr.push(line.data[i].changeInSentimentSlope);
-        //arr.push(line.data[i].countRatio);
+        arr.push(line.data[i].countRatio);
         //arr.push(line.data[i].priceOnStartDate);
         //arr.push(line.data[i].startSentiment);
         //arr.push(line.data[i].endSentiment);
@@ -88,6 +87,7 @@ function getIndicatorArray(input) {
         arr.push(input[i][2]);
         arr.push(input[i][3]);
         arr.push(input[i][4]);
+        arr.push(input[i][5]);
 
 
 

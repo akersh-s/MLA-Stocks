@@ -1,7 +1,7 @@
 var fs = require('fs-extra');
 var cache = {};
 var reported = [];
-var monthYear = 'oct_dec_2015';
+var monthYear = 'nov_jan_2016';
 var json = JSON.parse(fs.readFileSync(__dirname + '/../data/api_output/month_' + monthYear + '.json'));
 /*
 { difference: -66,
@@ -38,7 +38,7 @@ json.data.forEach(function(item) {
 
         if (!newItem.priceOnStartDate || !newItem.priceOnEndDate || !newItem.priceOnEndDate30) {
             console.log('throwing out ' + ticker + ' - ' + startDate);
-            return;  
+            return;
         }
         newData.push(newItem);
     }
@@ -85,7 +85,7 @@ function lookupPrice(ticker, date, n, newItem) {
         var formattedDate = formatDate(determineDate(date, n));
         while (!cache[ticker][formattedDate]) {
             n = n + 1;
-            
+
             formattedDate = formatDate(determineDate(date, n));
             if (n > 40) {
                 return null;

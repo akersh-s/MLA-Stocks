@@ -116,7 +116,7 @@ client.ping({
 
 var search = function() {
     var test = client.search({
-        index: 'octthroughdec_twits',
+        index: 'novthroughjan_twits',
         type: 'block',
         from: 0,
         body: {
