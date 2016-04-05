@@ -8,6 +8,8 @@ var stream = fs.createReadStream('data/jan_2016_updated.json', {
 var json2csv = require('nice-json2csv');
 var _ = require('underscore');
 var nodemailer = require('nodemailer');
+var moment = require('moment');
+
 
 
 var data = jsonfile.readFileSync('trainer/oct_dec_2015_indicators.json');
@@ -39,8 +41,8 @@ parser.on('data', function(obj) {
     var processedLine = processLine(obj);
     var csvContent = json2csv.convert(processedLine.data);
 
-    jsonfile.writeFile('output_data.json', processedLine.data);
-    jsonfile.writeFile('output_stats.json', processedLine.stats);
+    jsonfile.writeFile('output/' + moment().year() + '.' + moment().month() + '.' + moment().date() + '_output_data.json', processedLine.data);
+    jsonfile.writeFile('output/' + moment().year() + '.' + moment().month() + '.' + moment().date() + '_output_stats.json', processedLine.stats);
     fs.writeFile('output_data.csv', csvContent);
 
     console.log("complete");
@@ -69,7 +71,8 @@ function processLine(line) { // here's where we do something with a line
         line.data[i].decision = key[0];
 
         if (line.data[i].decision == "short") {
-            sendMail(line.data[i]);
+            //sendMail(line.data[i]);
+            console.log("sending mail");
         }
     };
 
