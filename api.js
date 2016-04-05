@@ -12,6 +12,13 @@ var client = new elasticsearch.Client({
     host: 'localhost:9200'
 });
 
+app.get('/month-stream', function(req, res) {
+    Q(streamSearch()).then(function(data) {
+
+        res.json(data);
+    });
+});
+
 app.get('/month', function(req, res) {
     Q(search()).then(function(data) {
         var processedData = pump(data);
@@ -114,9 +121,48 @@ client.ping({
     }
 });
 
+var streamSearch = function() {
+    var test = client.search({
+        index: 'stream_twits',
+        type: 'block',
+        from: 0,
+        body: {
+            "aggs": {
+                "posts_over_days": {
+                    "date_histogram": {
+                        "field": "created_at",
+                        "interval": "day",
+                        "format": "yyyy-MM-dd"
+                    },
+                    "aggs": {
+                        "group_by_stock": {
+                            "terms": {
+                                "field": "symbols.symbol",
+                                "order": {
+                                    "sum_of_sentiment": "asc"
+                                },
+                                "size": 1000000
+                            },
+                            "aggs": {
+                                "sum_of_sentiment": {
+                                    "sum": {
+                                        "field": "customSentiment.score"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    });
+
+    return test;
+}
+
 var search = function() {
     var test = client.search({
-        index: 'novthroughjan_twits',
+        index: 'nov_twits_2',
         type: 'block',
         from: 0,
         body: {

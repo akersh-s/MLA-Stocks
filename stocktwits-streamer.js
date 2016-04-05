@@ -31,7 +31,16 @@ setInterval(function() {
 
 function processResponse(messages) {
     for (var i = 0; i < messages.length; i++) {
-        processLine(messages[i]);
+        var obj = messages[i];
+
+        var customSentiment = sentiment(obj.body);
+        //console.log(customSentiment);
+        var newObj = {
+            obj: obj,
+            customSentiment: customSentiment
+        }
+
+        processLine(newObj);
     }
 }
 
