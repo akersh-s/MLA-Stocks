@@ -1,6 +1,8 @@
 var CronJob = require('cron').CronJob;
 var exec = require('child_process').exec;
 
+console.log('CRON Jobs initialized');
+
 //Runs the api-request to prep the decision tree algorithm every day (0-6) at 11:45PM (LA Time)
 var arJob = new CronJob('00 45 23 * * 0-6', function() {
 
