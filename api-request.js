@@ -2,7 +2,7 @@ var request = require('request');
 var jsonfile = require('jsonfile');
 
 
-request('http://localhost:3412/month', function (error, response, body) {
+request('http://localhost:3412/month', function(error, response, body) {
 
     console.log("executed the api request");
 
