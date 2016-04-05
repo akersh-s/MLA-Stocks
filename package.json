@@ -22,6 +22,7 @@
     "oauth-request": "0.0.1",
     "oauth2request": "^0.3.0",
     "q": "^1.4.1",
+    "request": "^2.70.0",
     "sentiment": "^1.0.6",
     "stats-lite": "^2.0.0",
     "twitter": "^1.2.5",

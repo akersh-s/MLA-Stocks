@@ -2,7 +2,7 @@ var jsonfile = require('jsonfile');
 var ml = require('machine_learning');
 var fs = require('fs');
 var JSONStream = require('JSONStream');
-var stream = fs.createReadStream('data/jan_2016_updated.json', {
+var stream = fs.createReadStream('prod/output.json', {
     encoding: 'utf8'
 });
 var json2csv = require('nice-json2csv');
