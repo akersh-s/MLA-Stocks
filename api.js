@@ -12,9 +12,15 @@ var client = new elasticsearch.Client({
     host: 'localhost:9200'
 });
 
+app.get('/month-stream-test', function(req, res) {
+    Q(streamSearch()).then(function(data) {
+        res.json(data);
+    });
+});
+
 app.get('/month-stream', function(req, res) {
     Q(streamSearch()).then(function(data) {
-        var processedData = pump(data.aggregations.last_5_mins);
+        var processedData = pump(data.aggregations.last_30_days);
         var sortedData = _.sortBy(processedData, 'difference');
         var statsDifference = getStatsDifference(sortedData);
         var statsCountRatio = getStatsCountRatio(sortedData);
@@ -147,14 +153,14 @@ var streamSearch = function() {
         index: 'stream_twits',
         type: 'block',
         from: 0,
-        size: 0,
+        size: 10000,
         body: {
             "aggs": {
-                "last_5_mins": {
+                "last_30_days": {
                     "filter": {
                         "range": {
                             "obj.created_at": {
-                                "gte": "now-5m",
+                                "gte": "now-30d",
                                 "lte": "now"
                             }
                         }
@@ -173,7 +179,7 @@ var streamSearch = function() {
                                         "order": {
                                             "sum_of_sentiment": "asc"
                                         },
-                                        "size": 1000000
+                                        "size": 100000
                                     },
                                     "aggs": {
                                         "sum_of_sentiment": {
