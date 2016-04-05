@@ -126,18 +126,29 @@ var streamSearch = function() {
         index: 'stream_twits',
         type: 'block',
         from: 0,
+        size: 0,
         body: {
+            "aggs": {
+  "last_5_mins": {
+    "filter": {
+      "range": {
+        "obj.created_at": {
+          "gte": "now-5m",
+          "lte": "now"
+        }
+      }
+  },
             "aggs": {
                 "posts_over_days": {
                     "date_histogram": {
-                        "field": "created_at",
+                        "field": "obj.created_at",
                         "interval": "day",
                         "format": "yyyy-MM-dd"
                     },
                     "aggs": {
                         "group_by_stock": {
                             "terms": {
-                                "field": "symbols.symbol",
+                                "field": "obj.symbols.symbol",
                                 "order": {
                                     "sum_of_sentiment": "asc"
                                 },
@@ -154,7 +165,7 @@ var streamSearch = function() {
                     }
                 }
             }
-        }
+        }}}
     });
 
     return test;

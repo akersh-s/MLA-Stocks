@@ -34,7 +34,6 @@ function processResponse(messages) {
         var obj = messages[i];
 
         var customSentiment = sentiment(obj.body);
-        //console.log(customSentiment);
         var newObj = {
             obj: obj,
             customSentiment: customSentiment
