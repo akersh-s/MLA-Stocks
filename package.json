@@ -16,6 +16,7 @@
     "machine_learning": "^0.0.8",
     "moment": "^2.12.0",
     "nice-json2csv": "^0.2.0",
+    "nodemailer": "^2.3.0",
     "oauth": "^0.9.14",
     "oauth-request": "0.0.1",
     "oauth2request": "^0.3.0",
