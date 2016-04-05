@@ -14,14 +14,35 @@ var client = new elasticsearch.Client({
 
 app.get('/month-stream', function(req, res) {
     Q(streamSearch()).then(function(data) {
+        var processedData = pump(data.aggregations.last_5_mins);
+        var sortedData = _.sortBy(processedData, 'difference');
+        var statsDifference = getStatsDifference(sortedData);
+        var statsCountRatio = getStatsCountRatio(sortedData);
+        var statsCountSlope = getStatsCountSlope(sortedData);
+        var statsSentimentSlope = getStatsSentimentSlope(sortedData);
 
-        res.json(data);
+        var stats = {
+            "difference": statsDifference,
+            "countSlope": statsCountSlope,
+            "sentimentSlope": statsSentimentSlope,
+            "countRatio": statsCountRatio
+        };
+
+        var data = compareStats(sortedData, stats);
+
+        var output = {
+            "stats": stats,
+            "data": data
+        };
+
+        res.json(output);
+        //res.json(data);
     });
 });
 
 app.get('/month', function(req, res) {
     Q(search()).then(function(data) {
-        var processedData = pump(data);
+        var processedData = pump(data.aggregations);
         var sortedData = _.sortBy(processedData, 'difference');
         var statsDifference = getStatsDifference(sortedData);
         var statsCountRatio = getStatsCountRatio(sortedData);
@@ -49,7 +70,7 @@ app.get('/month', function(req, res) {
 
 app.get('/ticker', function(req, res) {
     Q(search()).then(function(data) {
-        var processedData = pump(data);
+        var processedData = pump(data.aggregations);
         var sortedData = _.sortBy(processedData, 'endDate');
         var groupedData = _.groupBy(sortedData, 'ticker');
 
@@ -80,7 +101,7 @@ app.get('/ticker', function(req, res) {
 
 app.get('/day', function(req, res) {
     Q(search()).then(function(data) {
-        var processedData = pump(data);
+        var processedData = pump(data.aggregations);
         var sortedData = _.sortBy(processedData, 'changeInSentimentSlope');
         var groupedData = _.groupBy(sortedData, 'endDate');
         var output = [];
@@ -129,35 +150,37 @@ var streamSearch = function() {
         size: 0,
         body: {
             "aggs": {
-  "last_5_mins": {
-    "filter": {
-      "range": {
-        "obj.created_at": {
-          "gte": "now-5m",
-          "lte": "now"
-        }
-      }
-  },
-            "aggs": {
-                "posts_over_days": {
-                    "date_histogram": {
-                        "field": "obj.created_at",
-                        "interval": "day",
-                        "format": "yyyy-MM-dd"
+                "last_5_mins": {
+                    "filter": {
+                        "range": {
+                            "obj.created_at": {
+                                "gte": "now-5m",
+                                "lte": "now"
+                            }
+                        }
                     },
                     "aggs": {
-                        "group_by_stock": {
-                            "terms": {
-                                "field": "obj.symbols.symbol",
-                                "order": {
-                                    "sum_of_sentiment": "asc"
-                                },
-                                "size": 1000000
+                        "posts_over_days": {
+                            "date_histogram": {
+                                "field": "obj.created_at",
+                                "interval": "day",
+                                "format": "yyyy-MM-dd"
                             },
                             "aggs": {
-                                "sum_of_sentiment": {
-                                    "sum": {
-                                        "field": "customSentiment.score"
+                                "group_by_stock": {
+                                    "terms": {
+                                        "field": "obj.symbols.symbol",
+                                        "order": {
+                                            "sum_of_sentiment": "asc"
+                                        },
+                                        "size": 1000000
+                                    },
+                                    "aggs": {
+                                        "sum_of_sentiment": {
+                                            "sum": {
+                                                "field": "customSentiment.score"
+                                            }
+                                        }
                                     }
                                 }
                             }
@@ -165,12 +188,11 @@ var streamSearch = function() {
                     }
                 }
             }
-        }}}
+        }
     });
 
     return test;
 }
-
 var search = function() {
     var test = client.search({
         index: 'nov_twits_2',
@@ -318,8 +340,8 @@ var keys = function(data) {
     var output = [];
     var data = data;
 
-    for (var i = 0; i < data.aggregations.posts_over_days.buckets.length; i++) {
-        var pluckedKey = _.pluck(data.aggregations.posts_over_days.buckets[i].group_by_stock.buckets, "key");
+    for (var i = 0; i < data.posts_over_days.buckets.length; i++) {
+        var pluckedKey = _.pluck(data.posts_over_days.buckets[i].group_by_stock.buckets, "key");
         output.push(pluckedKey);
     }
     return _.uniq(_.flatten(output));
@@ -329,14 +351,14 @@ var result = function(key, data) {
     var output = [];
     var data = data;
 
-    for (var i = 0; i < data.aggregations.posts_over_days.buckets.length; i++) {
-        var match = _.where(data.aggregations.posts_over_days.buckets[i].group_by_stock.buckets, {
+    for (var i = 0; i < data.posts_over_days.buckets.length; i++) {
+        var match = _.where(data.posts_over_days.buckets[i].group_by_stock.buckets, {
             "key": key
         });
 
         if (!(_.isEmpty(match))) {
             var obj = {
-                "date": data.aggregations.posts_over_days.buckets[i].key_as_string,
+                "date": data.posts_over_days.buckets[i].key_as_string,
                 "obj": match
             };
             output.push(obj);
