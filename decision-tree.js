@@ -104,7 +104,9 @@ function sendMail(data) {
             '<br><b>End Count:</b> ' + data.endCount +
             '<br><b>Count Ratio:</b> ' + data.countRatio +
             '<br><b>Count Slope:</b> ' + data.countSlope +
-            '<br><b>Sentiment Slope:</b> ' + data.changeInSentimentSlope
+            '<br><b>Sentiment Slope:</b> ' + data.changeInSentimentSlope +
+            '<br><br>Yours,<br>' +
+            'Senti'
     };
 
     // send mail with defined transport object
@@ -118,7 +120,7 @@ function sendMail(data) {
 
 function isToday(endDate) {
         var dateDifference = moment(endDate, "YYYY/MM/DD").diff(moment(moment().format('YYYY/MM/DD'), "YYYY/MM/DD"));
-        
+
         if ( dateDifference != 0) {
             return false;
         } else {
