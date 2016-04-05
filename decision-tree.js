@@ -70,9 +70,9 @@ function processLine(line) { // here's where we do something with a line
         var key = _.keys(dt.classify(arr));
         line.data[i].decision = key[0];
 
-        if (line.data[i].decision == "short") {
-            //sendMail(line.data[i]);
-            console.log("sending mail");
+        if (line.data[i].decision == "short" && isToday(line.data[i].endDate) == true) {
+            sendMail(line.data[i]);
+            //console.log("sending mail");
         }
     };
 
@@ -114,4 +114,14 @@ function sendMail(data) {
         }
         console.log('Message sent: ' + info.response);
     });
+}
+
+function isToday(endDate) {
+        var dateDifference = moment(endDate, "YYYY/MM/DD").diff(moment(moment().format('YYYY/MM/DD'), "YYYY/MM/DD"));
+        
+        if ( dateDifference != 0) {
+            return false;
+        } else {
+            return true;
+        };
 }
