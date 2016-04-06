@@ -47,11 +47,10 @@ function processResponse(messages) {
 function processLine(line) {
     console.log("processing");
 
-
     client.create({
         index: 'stream_twits',
         type: 'block',
-        id: line.id,
+        id: line.obj.id,
         body: line
     }, function(error, response) {
         if (error) {
