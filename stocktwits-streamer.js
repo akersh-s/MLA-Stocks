@@ -18,7 +18,7 @@ setInterval(function() {
         followRedirect: true,
         maxRedirects: 10
     }, function(error, response, body) {
-        if (!error && response.statusCode == 200) {
+        if (!error) {
             console.log('sucess!');
             var messages = JSON.parse(response.body).messages;
             processResponse(messages);
