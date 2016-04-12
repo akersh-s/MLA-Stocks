@@ -2,7 +2,7 @@ var elasticsearch = require('elasticsearch');
 var fs = require('fs');
 var JSONStream = require('JSONStream');
 var sentiment = require('sentiment');
-var stream = fs.createReadStream('data/backup/stocktwits_messages_jan_2016.json', {
+var stream = fs.createReadStream('data/backup/stocktwits_messages_dec_2015.json', {
     encoding: 'utf8'
 });
 var i = 0;
@@ -35,7 +35,7 @@ parser.on('data', function(obj) {
         obj: obj,
         customSentiment: customSentiment
     }
-    arr.push({ "index" : { "_index" : "jan_twits_newest", "_type" : "block", "_id" : obj.id } })
+    arr.push({ "index" : { "_index" : "oct_twits_bulked_4", "_type" : "block", "_id" : obj.id } })
     arr.push(newObj);
     processLine(arr);
 });

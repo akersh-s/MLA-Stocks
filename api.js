@@ -201,7 +201,7 @@ var streamSearch = function() {
 }
 var search = function() {
     var test = client.search({
-        index: 'nov_twits_2',
+        index: 'oct_twits_bulked_4',
         type: 'block',
         from: 0,
         body: {

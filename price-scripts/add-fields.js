@@ -1,8 +1,10 @@
 var fs = require('fs-extra');
 var cache = {};
 var reported = [];
-var monthYear = 'nov_jan_2016';
+var monthYear = 'oct_dec_2015(inProd)';
 var json = JSON.parse(fs.readFileSync(__dirname + '/../data/api_output/month_' + monthYear + '.json'));
+//var json = JSON.parse(fs.readFileSync(__dirname + '/../data/prod/current.json'));
+
 /*
 { difference: -66,
   startDate: '2015-10-14',
@@ -48,6 +50,7 @@ json.data.forEach(function(item) {
 json.data = newData;
 
 fs.writeFileSync(__dirname + '/../data/' + monthYear  +'_updated.json', JSON.stringify(json, null, 4), 'utf-8');
+//fs.writeFileSync(__dirname + '/../data/prod/current.json', JSON.stringify(json, null, 4), 'utf-8');
 
 
 

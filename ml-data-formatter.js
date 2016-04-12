@@ -1,6 +1,6 @@
 var fs = require('fs');
 var JSONStream = require('JSONStream');
-var stream = fs.createReadStream('data/oct_dec_2015_updated.json', {
+var stream = fs.createReadStream('data/oct_dec_2015(inProd)_updated.json', {
     encoding: 'utf8'
 });
 var _ = require('underscore');
@@ -38,7 +38,7 @@ function processLine(line) { // here's where we do something with a line
         var arr = [];
         var profit = (line.data[i].priceOnEndDate - line.data[i].priceOnEndDate15) / line.data[i].priceOnEndDate;
 
-        if (line.data[i].difference < 0 && profit < -0.40) {
+        if (line.data[i].difference < 0 && profit < 0) {
             arr.push("short");
         } else {
             arr.push("do nothing");
@@ -86,7 +86,7 @@ function getIndicatorArray(input) {
         arr.push(input[i][1]);
         arr.push(input[i][2]);
         arr.push(input[i][3]);
-        arr.push(input[i][4]);
+        //arr.push(input[i][4]);
         //arr.push(input[i][5]);
 
 
