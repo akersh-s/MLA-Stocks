@@ -38,7 +38,7 @@ function processLine(line) { // here's where we do something with a line
         var arr = [];
         var profit = (line.data[i].priceOnEndDate - line.data[i].priceOnEndDate15) / line.data[i].priceOnEndDate;
 
-        if (line.data[i].difference < 0 && profit < 0) {
+        if (line.data[i].difference < 0 && profit < -0.40) {
             arr.push("short");
         } else {
             arr.push("do nothing");

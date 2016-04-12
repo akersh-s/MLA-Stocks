@@ -22,8 +22,10 @@ setInterval(function() {
             console.log('sucess!');
             var messages = JSON.parse(response.body).messages;
             processResponse(messages);
+        } else if (error) {
+            console.log('error: ' + error);
         } else {
-            console.log('error' + response.statusCode);
+            console.log('unknown operation');
         }
     });
 }, 10000);
