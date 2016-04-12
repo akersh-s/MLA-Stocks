@@ -86,7 +86,7 @@ function getIndicatorArray(input) {
         arr.push(input[i][1]);
         arr.push(input[i][2]);
         arr.push(input[i][3]);
-        //arr.push(input[i][4]);
+        arr.push(input[i][4]);
         //arr.push(input[i][5]);
 
 
