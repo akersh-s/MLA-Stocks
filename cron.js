@@ -3,8 +3,8 @@ var exec = require('child_process').exec;
 
 console.log('CRON Jobs initialized');
 
-//Runs the api-request to prep the decision tree algorithm every day (0-6) at 11:45PM (LA Time)
-var arJob = new CronJob('00 45 23 * * 0-6', function() {
+//Runs the api-request to prep the decision tree algorithm every day (0-6) at 10:45PM (LA Time)
+var arJob = new CronJob('00 45 22 * * 0-6', function() {
 
         var child = exec('node api-request.js', function(error, stdout, stderr) {
             console.log('stdout: ' + stdout);
@@ -26,8 +26,8 @@ var arJob = new CronJob('00 45 23 * * 0-6', function() {
     'America/Los_Angeles'
 );
 
-//Runs the decision-tree algorithm every day (0-6) at 11:59PM (LA Time)
-var dtJob = new CronJob('00 59 23 * * 0-6', function() {
+//Runs the decision-tree algorithm every day (0-6) at 11:00PM (LA Time)
+var dtJob = new CronJob('00 00 23 * * 0-6', function() {
 
         var child = exec('node decision-tree.js', function(error, stdout, stderr) {
             console.log('stdout: ' + stdout);
