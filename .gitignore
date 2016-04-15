@@ -3,3 +3,4 @@ trainer/
 data/
 prices/
 output/
+output_data.csv
