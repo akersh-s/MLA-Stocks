@@ -6,7 +6,9 @@ var _ = require('underscore');
 var _ = require('lodash');
 var stats = require("stats-lite");
 var moment = require('moment');
-
+var log4js = require('log4js');
+var logger = log4js.getLogger('API');
+logger.setLevel('INFO');
 
 var client = new elasticsearch.Client({
     host: 'localhost:9200'
@@ -41,6 +43,7 @@ app.get('/month-stream', function(req, res) {
             "data": data
         };
 
+        logger.info('Month Stream Response Processed');
         res.json(output);
         //res.json(data);
     });
@@ -142,9 +145,9 @@ client.ping({
     hello: "elasticsearch"
 }, function(error) {
     if (error) {
-        console.error('elasticsearch cluster is down!');
+        logger.error('Elasticsearch cluster is down');
     } else {
-        console.log('All is well');
+        logger.info('All is well');
     }
 });
 

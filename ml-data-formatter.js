@@ -5,6 +5,9 @@ var stream = fs.createReadStream('data/oct_dec_2015(inProd)_updated.json', {
 });
 var _ = require('underscore');
 var jsonfile = require('jsonfile');
+var log4js = require('log4js');
+var logger = log4js.getLogger('ML-DATA-FORMATTER');
+logger.setLevel('INFO');
 
 
 var parser = JSONStream.parse();
@@ -12,18 +15,18 @@ var parser = JSONStream.parse();
 stream.pipe(parser);
 
 parser.on('data', function(obj) {
-    console.log("starting");
+    logger.info("Starting Read Stream");
 
     var processedData = processLine(obj);
     var positionArray = getPositionArray(processedData);
     var indicatorArray = getIndicatorArray(processedData, positionArray);
 
-    console.log("writing to file");
+    logger.info("Writing Read Stream to File");
 
     jsonfile.writeFile('trainer/oct_dec_2015_positions.json', positionArray);
     jsonfile.writeFile('trainer/oct_dec_2015_indicators.json', indicatorArray);
 
-    console.log("complete");
+    logger.info("Completed Write to File");
 
 });
 
@@ -31,7 +34,7 @@ parser.on('data', function(obj) {
 
 
 function processLine(line) { // here's where we do something with a line
-    console.log("processing");
+    logger.info("Processing Lines");
     var dataArray = [];
 
     for (var i = 0; i < line.data.length; i++) {

@@ -9,24 +9,27 @@ var json2csv = require('nice-json2csv');
 var _ = require('underscore');
 var nodemailer = require('nodemailer');
 var moment = require('moment');
+var log4js = require('log4js');
+var logger = log4js.getLogger('DECISION-TREE');
+logger.setLevel('INFO');
 
 
 
 var data = jsonfile.readFileSync('trainer/oct_dec_2015_indicators.json');
 var result = jsonfile.readFileSync('trainer/oct_dec_2015_positions.json');
 
-console.log("preparing decision tree");
+logger.info("Preparing Decision Tree");
 
 var dt = new ml.DecisionTree({
     data: data,
     result: result
 });
 
-console.log("building decision tree");
+logger.info("Building Decision Tree");
 
 dt.build();
 
-console.log("pruning decision tree");
+logger.info("pruning decision tree");
 
 dt.prune(1.0);
 
@@ -36,7 +39,7 @@ var parser = JSONStream.parse();
 stream.pipe(parser);
 
 parser.on('data', function(obj) {
-    console.log("starting");
+    logger.info("Starting Read Stream");
 
     var processedLine = processLine(obj);
     var csvContent = json2csv.convert(processedLine.data);
@@ -45,13 +48,13 @@ parser.on('data', function(obj) {
     jsonfile.writeFile('output/' + moment().year() + '.' + moment().month() + '.' + moment().date() + '_output_stats.json', processedLine.stats);
     fs.writeFile('output_data.csv', csvContent);
 
-    console.log("complete");
+    logger.info("Completed Streaming");
 
 });
 
 
 function processLine(line) { // here's where we do something with a line
-    console.log("processing");
+    logger.info("Processing Stream");
 
     for (var i = 0; i < line.data.length; i++) {
         var arr = [];
@@ -72,7 +75,9 @@ function processLine(line) { // here's where we do something with a line
 
         if (line.data[i].decision == "short" && isToday(line.data[i].endDate) == true) {
             sendMail(line.data[i]);
-            //console.log("sending mail");
+            logger.info("Detected a Current Short Position, Sending Mail")
+        } else if (linle.data[i].decision == "short" && isToday(line.data[i].endDate) == false) {
+            logger.info("Detected a Previous Short Position, No Mail")
         }
     };
 
@@ -112,9 +117,9 @@ function sendMail(data) {
     // send mail with defined transport object
     transporter.sendMail(mailOptions, function(error, info) {
         if (error) {
-            return console.log(error);
+            return logger.error(error);
         }
-        console.log('Message sent: ' + info.response);
+        logger.info('Message sent: ' + info.response);
     });
 }
 

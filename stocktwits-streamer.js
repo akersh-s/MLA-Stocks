@@ -2,7 +2,9 @@ var http = require('http');
 var request = require('request');
 var elasticsearch = require('elasticsearch');
 var sentiment = require('sentiment');
-
+var log4js = require('log4js');
+var logger = log4js.getLogger('ST-STREAMER');
+logger.setLevel('INFO');
 
 var client = new elasticsearch.Client({
     host: 'localhost:9200',
@@ -19,13 +21,13 @@ setInterval(function() {
         maxRedirects: 10
     }, function(error, response, body) {
         if (!error) {
-            console.log('sucess!');
+            logger.info('Processing');
             var messages = JSON.parse(response.body).messages;
             processResponse(messages);
         } else if (error) {
-            console.log('error: ' + error);
+            logger.error(error);
         } else {
-            console.log('unknown operation');
+            logger.error('Unknown operation');
         }
     });
 }, 10000);
@@ -47,7 +49,7 @@ function processResponse(messages) {
 
 
 function processLine(line) {
-    console.log("processing");
+    logger.info("Record Prepared");
 
     client.create({
         index: 'stream_twits',
@@ -55,10 +57,12 @@ function processLine(line) {
         id: line.obj.id,
         body: line
     }, function(error, response) {
-        if (error) {
-            console.log('elasticsearch error' + error.message);
+        if (error && error.statusCode && error.statusCode != 409) {
+            logger.error(error);
+        } else if (error && error.statusCode && error.statusCode == 409) {
+            logger.info('Record Exists...Continuing');
         } else {
-            console.log('record created');
+            logger.info('New Record Created');
         }
     });
 }
