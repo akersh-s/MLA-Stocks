@@ -57,10 +57,10 @@ function processLine(line) {
         id: line.obj.id,
         body: line
     }, function(error, response) {
-        if (error && error.statusCode && error.statusCode != 409) {
-            logger.error(error);
-        } else if (error && error.statusCode && error.statusCode == 409) {
-            logger.info('Record Exists...Continuing');
+        if (error && error.displayName == "Conflict") {
+            logger.info(error.displayName);
+        } else if (error) { 
+            logger.error(error.message);
         } else {
             logger.info('New Record Created');
         }
