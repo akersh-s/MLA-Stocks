@@ -76,7 +76,7 @@ function processLine(line) { // here's where we do something with a line
         if (line.data[i].decision == "short" && isToday(line.data[i].endDate) == true) {
             sendMail(line.data[i]);
             logger.info("Detected a Current Short Position, Sending Mail")
-        } else if (linle.data[i].decision == "short" && isToday(line.data[i].endDate) == false) {
+        } else if (line.data[i].decision == "short" && isToday(line.data[i].endDate) == false) {
             logger.info("Detected a Previous Short Position, No Mail")
         }
     };
