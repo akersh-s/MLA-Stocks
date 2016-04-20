@@ -257,6 +257,7 @@ var compareStats = function(data, stats) {
 var getStatsDifference = function(data) {
     var data = data;
     var cleanedData = _.pluck(data, 'difference');
+    var numbersOnly = filterNonNumeric(cleanedData);
     var output = {
         "mean": stats.mean(cleanedData),
         "median": stats.median(cleanedData),
@@ -264,8 +265,8 @@ var getStatsDifference = function(data) {
         "variance": stats.variance(cleanedData),
         "stdev": stats.stdev(cleanedData),
         "1percentile": stats.percentile(cleanedData, 0.01),
-        "min": _.min(cleanedData),
-        "max": _.max(cleanedData)
+        "min": _.min(numbersOnly),
+        "max": _.max(numbersOnly)
 
     };
 
@@ -275,6 +276,7 @@ var getStatsDifference = function(data) {
 var getStatsEndCount = function(data) {
     var data = data;
     var cleanedData = _.pluck(data, 'endCount');
+    var numbersOnly = filterNonNumeric(cleanedData);
     var output = {
         "mean": stats.mean(cleanedData),
         "median": stats.median(cleanedData),
@@ -282,8 +284,8 @@ var getStatsEndCount = function(data) {
         "variance": stats.variance(cleanedData),
         "stdev": stats.stdev(cleanedData),
         "99percentile": stats.percentile(cleanedData, 0.99),
-        "min": _.min(cleanedData),
-        "max": _.max(cleanedData)
+        "min": _.min(numbersOnly),
+        "max": _.max(numbersOnly)
 
     };
 
@@ -293,6 +295,7 @@ var getStatsEndCount = function(data) {
 var getStatsCountRatio = function(data) {
     var data = data;
     var cleanedData = _.pluck(data, 'countRatio');
+    var numbersOnly = filterNonNumeric(cleanedData);
     var output = {
         "mean": stats.mean(cleanedData),
         "median": stats.median(cleanedData),
@@ -300,8 +303,8 @@ var getStatsCountRatio = function(data) {
         "variance": stats.variance(cleanedData),
         "stdev": stats.stdev(cleanedData),
         "99percentile": stats.percentile(cleanedData, 0.99),
-        "min": _.min(cleanedData),
-        "max": _.max(cleanedData)
+        "min": _.min(numbersOnly),
+        "max": _.max(numbersOnly)
 
     };
 
@@ -311,6 +314,8 @@ var getStatsCountRatio = function(data) {
 var getStatsCountSlope = function(data) {
     var data = data;
     var cleanedData = _.pluck(data, 'countSlope');
+    var numbersOnly = filterNonNumeric(cleanedData);
+
     var output = {
         "mean": stats.mean(cleanedData),
         "median": stats.median(cleanedData),
@@ -318,8 +323,8 @@ var getStatsCountSlope = function(data) {
         "variance": stats.variance(cleanedData),
         "stdev": stats.stdev(cleanedData),
         "99percentile": stats.percentile(cleanedData, 0.99),
-        "min": _.min(cleanedData),
-        "max": _.max(cleanedData)
+        "min": _.min(numbersOnly),
+        "max": _.max(numbersOnly)
 
     };
 
@@ -330,6 +335,7 @@ var getStatsCountSlope = function(data) {
 var getStatsSentimentSlope = function(data) {
     var data = data;
     var cleanedData = _.pluck(data, 'changeInSentimentSlope');
+    var numbersOnly = filterNonNumeric(cleanedData);
     var output = {
         "mean": stats.mean(cleanedData),
         "median": stats.median(cleanedData),
@@ -337,12 +343,23 @@ var getStatsSentimentSlope = function(data) {
         "variance": stats.variance(cleanedData),
         "stdev": stats.stdev(cleanedData),
         "99percentile": stats.percentile(cleanedData, 0.99),
-        "min": _.min(cleanedData),
-        "max": _.max(cleanedData)
+        "min": _.min(numbersOnly),
+        "max": _.max(numbersOnly)
 
     };
 
     return output;
+}
+
+var filterNonNumeric = function(list) {
+    var list = list;
+
+    var numbersOnly = _.reject(_.uniq(list), function(num){
+
+        return !_.isFinite(num) || _.isNaN(num) || _.isString(num); 
+    });
+    
+    return numbersOnly
 }
 
 var keys = function(data) {
