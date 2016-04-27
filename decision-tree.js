@@ -75,9 +75,9 @@ function processLine(line) { // here's where we do something with a line
 
         if (line.data[i].decision == "short" && isToday(line.data[i].endDate) == true) {
             sendMail(line.data[i]);
-            logger.info("Detected a Current Short Position, Sending Mail")
+            logger.info("Detected a Current Short Position " + line.data[i].ticker.toUpperCase() + " " + line.data[i].endDate + " ...Sending Mail");
         } else if (line.data[i].decision == "short" && isToday(line.data[i].endDate) == false) {
-            logger.info("Detected a Previous Short Position, No Mail")
+            logger.info("Detected a Previous Short Position " + line.data[i].ticker.toUpperCase() + " " + line.data[i].endDate + " ...No Mail");
         }
     };
 
@@ -111,7 +111,11 @@ function sendMail(data) {
             '<br><b>Count Slope:</b> ' + data.countSlope +
             '<br><b>Sentiment Slope:</b> ' + data.changeInSentimentSlope +
             '<br><br>Yours,<br>' +
-            'Senti'
+            'Senti',
+        attachments:[{
+            filename: 'output_'+ moment().format("YYMMDD")+'.csv',
+            content: fs.createReadStream('output_data.csv')
+        }]
     };
 
     // send mail with defined transport object
