@@ -114,8 +114,7 @@ function sendMail(data) {
             'Senti',
         attachments:[{
             filename: 'output_'+ moment().format("YYMMDD")+'.csv',
-            content: fs.createReadStream('output_data.csv')
-        }]
+            path: 'output_data.csv'        }]
     };
 
     // send mail with defined transport object
