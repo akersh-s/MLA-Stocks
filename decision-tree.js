@@ -76,8 +76,6 @@ function processLine(line) { // here's where we do something with a line
         if (line.data[i].decision == "short" && isToday(line.data[i].endDate) == true) {
             sendMail(line.data[i]);
             logger.info("Detected a Current Short Position " + line.data[i].ticker.toUpperCase() + " " + line.data[i].endDate + " ...Sending Mail");
-        } else if (line.data[i].decision == "short" && isToday(line.data[i].endDate) == false) {
-            logger.info("Detected a Previous Short Position " + line.data[i].ticker.toUpperCase() + " " + line.data[i].endDate + " ...No Mail");
         }
     };
 
