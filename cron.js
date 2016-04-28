@@ -9,7 +9,7 @@ logger.info('CRON Scheduler initialized');
 //Runs the api-request to prep the decision tree algorithm every day (0-6) at 10:45PM (LA Time)
 var arJob = new CronJob('00 45 22 * * 0-6', function() {
 
-        var child = exec('node api-request.js', function(error, stdout, stderr) {
+        var child = exec('node api-request.js', {maxBuffer: 1024 * 500}, function(error, stdout, stderr) {
             logger.info('STDOUT: ' + stdout);
 
             if (stderr) {
@@ -32,7 +32,7 @@ var arJob = new CronJob('00 45 22 * * 0-6', function() {
 //Runs the decision-tree algorithm every day (0-6) at 11:00PM (LA Time)
 var dtJob = new CronJob('00 00 23 * * 0-6', function() {
 
-        var child = exec('node decision-tree.js', function(error, stdout, stderr) {
+        var child = exec('node decision-tree.js', {maxBuffer: 1024 * 500}, function(error, stdout, stderr) {
             logger.info('STDOUT: ' + stdout);
 
             if (stderr) {
