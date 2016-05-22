@@ -15,8 +15,8 @@ logger.setLevel('INFO');
 
 
 
-var data = jsonfile.readFileSync('trainer/oct_dec_2015_indicators.json');
-var result = jsonfile.readFileSync('trainer/oct_dec_2015_positions.json');
+var data = jsonfile.readFileSync('trainer/nov_2015_byDate_priceFilter_indicators.json');
+var result = jsonfile.readFileSync('trainer/nov_2015_byDate_priceFilter_positions.json');
 
 logger.info("Preparing Decision Tree");
 
