@@ -163,7 +163,7 @@ var streamSearch = function() {
                     "filter": {
                         "range": {
                             "obj.created_at": {
-                                "gte": "now-1d/d",
+                                "gte": "now-2d/d",
                                 "lte": "now"
                             }
                         }
