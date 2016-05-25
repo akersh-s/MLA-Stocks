@@ -89,7 +89,7 @@ function sendMail(data) {
     // setup e-mail data with unicode symbols
     var mailOptions = {
         from: '"Machine" <machine@tempest-ventures.com>', // sender address
-        to: 'akersh.srivastava@tempest-ventures.com', // list of receivers
+        to: 'akersh.srivastava@tempest-ventures.com, thomaswmanion@gmail.com, carlosale123@gmail.com', // list of receivers
         subject: data.decision.toUpperCase() + ' ' + data.ticker.toUpperCase(), // Subject line
         text: 'Good Morning, ' +
             'I detected a ' + data.decision.toUpperCase() +
